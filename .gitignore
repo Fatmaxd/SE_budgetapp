@@ -1,0 +1,26 @@
+# Ignore class files and build output
+*.class
+/bin/
+/src/bin/
+
+# Ignore database files
+*.db
+
+# Ignore VSCode config
+.vscode/
+
+# Ignore JAR files
+*.jar
+lib/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore logs and temp files
+*.log
+*.tmp
+
+# Ignore environment and IDE configs
+.idea/
+*.iml

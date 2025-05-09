@@ -7,18 +7,31 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.animation.FillTransition;
+import javafx.util.Duration;
 
 /**
  * Contains all boundary classes for the Personal Budgeting application.
  */
 public class boundary {
     // Common styles for the app
-    private static final String APP_STYLE = "-fx-background-color: linear-gradient(to bottom, #2E2E2E, #1C2526);";
-    private static final String LABEL_STYLE = "-fx-text-fill: #E0E0E0; -fx-font-size: 16px; -fx-font-family: 'Arial';";
-    private static final String BUTTON_STYLE = "-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 20; -fx-background-radius: 5;";
-    private static final String BUTTON_HOVER_STYLE = "-fx-background-color: #45A049;";
-    private static final String TEXT_FIELD_STYLE = "-fx-background-color: #424242; -fx-text-fill: white; -fx-prompt-text-fill: #B0B0B0; -fx-border-color: #616161; -fx-border-radius: 5;";
-    private static final String ERROR_STYLE = "-fx-border-color: #F44336; -fx-border-width: 2;";
+    private static final String APP_STYLE = "-fx-background-color: #000000;";
+    private static final String LABEL_STYLE = "-fx-text-fill: #FFFFFF; -fx-font-size: 16px; -fx-font-family: 'Arial'; -fx-font-weight: bold;";
+    private static final String BUTTON_STYLE = "-fx-background-color: #FFFFFF; -fx-text-fill: #000000; -fx-font-size: 14px; -fx-padding: 12 24; -fx-background-radius: 8; -fx-border-color: #FFFFFF; -fx-border-width: 2; -fx-border-radius: 8;";
+    private static final String BUTTON_HOVER_STYLE = "-fx-background-color: #333333; -fx-text-fill: #FFFFFF;";
+    private static final String TEXT_FIELD_STYLE = "-fx-background-color: #1A1A1A; -fx-text-fill: #FFFFFF; -fx-prompt-text-fill: #888888; -fx-border-color: #FFFFFF; -fx-border-width: 2; -fx-border-radius: 8; -fx-padding: 8;";
+    private static final String ERROR_STYLE = "-fx-border-color: #FF0000; -fx-border-width: 2;";
+
+    // Add styleButton method to the outer class
+    private static void styleButton(Button button) {
+        button.setStyle(BUTTON_STYLE);
+        button.setOnMouseEntered(e -> {
+            button.setStyle(BUTTON_STYLE + BUTTON_HOVER_STYLE);
+        });
+        button.setOnMouseExited(e -> {
+            button.setStyle(BUTTON_STYLE);
+        });
+    }
 
     /**
      * Displays the login page for user authentication.
@@ -34,13 +47,13 @@ public class boundary {
         public void show() {
             GridPane root = new GridPane();
             root.setAlignment(Pos.CENTER);
-            root.setHgap(10);
-            root.setVgap(15);
-            root.setPadding(new Insets(20));
+            root.setHgap(20);
+            root.setVgap(20);
+            root.setPadding(new Insets(40));
             root.setStyle(APP_STYLE);
 
             Label titleLabel = new Label("Personal Budgeting - Login");
-            titleLabel.setStyle(LABEL_STYLE + " -fx-font-size: 20px; -fx-font-weight: bold;");
+            titleLabel.setStyle(LABEL_STYLE + " -fx-font-size: 24px;");
             GridPane.setHalignment(titleLabel, javafx.geometry.HPos.CENTER);
 
             Label usernameLabel = new Label("Username:");
@@ -58,15 +71,7 @@ public class boundary {
             Tooltip.install(passwordField, new Tooltip("Enter your password"));
 
             Button loginButton = new Button("Login");
-            loginButton.setStyle(BUTTON_STYLE);
-            loginButton.setOnMouseEntered(e -> loginButton.setStyle(BUTTON_HOVER_STYLE));
-            loginButton.setOnMouseExited(e -> loginButton.setStyle(BUTTON_STYLE));
-
-            Button signupButton = new Button("Sign Up");
-            signupButton.setStyle(BUTTON_STYLE);
-            signupButton.setOnMouseEntered(e -> signupButton.setStyle(BUTTON_HOVER_STYLE));
-            signupButton.setOnMouseExited(e -> signupButton.setStyle(BUTTON_STYLE));
-
+            styleButton(loginButton);  // Now this works since styleButton is in the outer class
             loginButton.setOnAction(e -> {
                 String username = usernameField.getText();
                 String password = passwordField.getText();
@@ -93,9 +98,10 @@ public class boundary {
                 }
             });
 
+            Button signupButton = new Button("Sign Up");
+            styleButton(signupButton);
             signupButton.setOnAction(e -> new SignUpPage(stage).show());
 
-            // Add elements to GridPane
             root.add(titleLabel, 0, 0, 2, 1);
             root.add(usernameLabel, 0, 1);
             root.add(usernameField, 1, 1);
@@ -104,13 +110,12 @@ public class boundary {
             root.add(loginButton, 0, 3);
             root.add(signupButton, 1, 3);
 
-            Scene scene = new Scene(root, 400, 500);
+            Scene scene = new Scene(root, 450, 550);
             stage.setScene(scene);
             stage.setTitle("Login");
             stage.show();
         }
     }
-
     /**
      * Displays the sign-up page for creating a new user account.
      */
@@ -125,13 +130,13 @@ public class boundary {
         public void show() {
             GridPane root = new GridPane();
             root.setAlignment(Pos.CENTER);
-            root.setHgap(10);
-            root.setVgap(15);
-            root.setPadding(new Insets(20));
+            root.setHgap(20);
+            root.setVgap(20);
+            root.setPadding(new Insets(40));
             root.setStyle(APP_STYLE);
 
             Label titleLabel = new Label("Personal Budgeting - Sign Up");
-            titleLabel.setStyle(LABEL_STYLE + " -fx-font-size: 20px; -fx-font-weight: bold;");
+            titleLabel.setStyle(LABEL_STYLE + " -fx-font-size: 24px;");
             GridPane.setHalignment(titleLabel, javafx.geometry.HPos.CENTER);
 
             Label emailLabel = new Label("Email:");
@@ -163,15 +168,7 @@ public class boundary {
             Tooltip.install(phoneField, new Tooltip("Enter your phone number"));
 
             Button signupButton = new Button("Sign Up");
-            signupButton.setStyle(BUTTON_STYLE);
-            signupButton.setOnMouseEntered(e -> signupButton.setStyle(BUTTON_HOVER_STYLE));
-            signupButton.setOnMouseExited(e -> signupButton.setStyle(BUTTON_STYLE));
-
-            Button backButton = new Button("Back");
-            backButton.setStyle(BUTTON_STYLE);
-            backButton.setOnMouseEntered(e -> backButton.setStyle(BUTTON_HOVER_STYLE));
-            backButton.setOnMouseExited(e -> backButton.setStyle(BUTTON_STYLE));
-
+            styleButton(signupButton);
             signupButton.setOnAction(e -> {
                 String email = emailField.getText();
                 String username = usernameField.getText();
@@ -213,6 +210,8 @@ public class boundary {
                 }
             });
 
+            Button backButton = new Button("Back");
+            styleButton(backButton);
             backButton.setOnAction(e -> new LoginPage(stage).show());
 
             root.add(titleLabel, 0, 0, 2, 1);
@@ -227,7 +226,7 @@ public class boundary {
             root.add(signupButton, 0, 5);
             root.add(backButton, 1, 5);
 
-            Scene scene = new Scene(root, 400, 600);
+            Scene scene = new Scene(root, 450, 650);
             stage.setScene(scene);
             stage.setTitle("Sign Up");
             stage.show();
@@ -247,47 +246,36 @@ public class boundary {
         }
 
         public void show() {
-            VBox root = new VBox(15);
+            VBox root = new VBox(25);
             root.setAlignment(Pos.CENTER);
-            root.setPadding(new Insets(20));
+            root.setPadding(new Insets(40));
             root.setStyle(APP_STYLE);
 
             Label titleLabel = new Label("Welcome, " + user.getUsername());
-            titleLabel.setStyle(LABEL_STYLE + " -fx-font-size: 20px; -fx-font-weight: bold;");
+            titleLabel.setStyle(LABEL_STYLE + " -fx-font-size: 24px;");
 
             Button incomeButton = new Button("Track Income");
-            incomeButton.setStyle(BUTTON_STYLE);
-            incomeButton.setOnMouseEntered(e -> incomeButton.setStyle(BUTTON_HOVER_STYLE));
-            incomeButton.setOnMouseExited(e -> incomeButton.setStyle(BUTTON_STYLE));
+            styleButton(incomeButton);
+            incomeButton.setOnAction(e -> new IncomeTrackingPage(stage, user).show());
 
             Button expenseButton = new Button("Track Expense");
-            expenseButton.setStyle(BUTTON_STYLE);
-            expenseButton.setOnMouseEntered(e -> expenseButton.setStyle(BUTTON_HOVER_STYLE));
-            expenseButton.setOnMouseExited(e -> expenseButton.setStyle(BUTTON_STYLE));
+            styleButton(expenseButton);
+            expenseButton.setOnAction(e -> new ExpenseTrackingPage(stage, user).show());
 
             Button budgetButton = new Button("Set Budget");
-            budgetButton.setStyle(BUTTON_STYLE);
-            budgetButton.setOnMouseEntered(e -> budgetButton.setStyle(BUTTON_HOVER_STYLE));
-            budgetButton.setOnMouseExited(e -> budgetButton.setStyle(BUTTON_STYLE));
+            styleButton(budgetButton);
+            budgetButton.setOnAction(e -> new BudgetPage(stage, user).show());
 
             Button reminderButton = new Button("Set Reminder");
-            reminderButton.setStyle(BUTTON_STYLE);
-            reminderButton.setOnMouseEntered(e -> reminderButton.setStyle(BUTTON_HOVER_STYLE));
-            reminderButton.setOnMouseExited(e -> reminderButton.setStyle(BUTTON_STYLE));
+            styleButton(reminderButton);
+            reminderButton.setOnAction(e -> new ReminderPage(stage, user).show());
 
             Button logoutButton = new Button("Logout");
-            logoutButton.setStyle(BUTTON_STYLE);
-            logoutButton.setOnMouseEntered(e -> logoutButton.setStyle(BUTTON_HOVER_STYLE));
-            logoutButton.setOnMouseExited(e -> logoutButton.setStyle(BUTTON_STYLE));
-
-            incomeButton.setOnAction(e -> new IncomeTrackingPage(stage, user).show());
-            expenseButton.setOnAction(e -> new ExpenseTrackingPage(stage, user).show());
-            budgetButton.setOnAction(e -> new BudgetPage(stage, user).show());
-            reminderButton.setOnAction(e -> new ReminderPage(stage, user).show());
+            styleButton(logoutButton);
             logoutButton.setOnAction(e -> new LoginPage(stage).show());
 
             root.getChildren().addAll(titleLabel, incomeButton, expenseButton, budgetButton, reminderButton, logoutButton);
-            Scene scene = new Scene(root, 400, 500);
+            Scene scene = new Scene(root, 450, 550);
             stage.setScene(scene);
             stage.setTitle("Dashboard");
             stage.show();
@@ -310,13 +298,13 @@ public class boundary {
         public void show() {
             GridPane root = new GridPane();
             root.setAlignment(Pos.CENTER);
-            root.setHgap(10);
-            root.setVgap(15);
-            root.setPadding(new Insets(20));
+            root.setHgap(20);
+            root.setVgap(20);
+            root.setPadding(new Insets(40));
             root.setStyle(APP_STYLE);
 
             Label titleLabel = new Label("Track Income");
-            titleLabel.setStyle(LABEL_STYLE + " -fx-font-size: 20px; -fx-font-weight: bold;");
+            titleLabel.setStyle(LABEL_STYLE + " -fx-font-size: 24px;");
             GridPane.setHalignment(titleLabel, javafx.geometry.HPos.CENTER);
 
             Label sourceLabel = new Label("Source:");
@@ -341,15 +329,7 @@ public class boundary {
             Tooltip.install(dateField, new Tooltip("Enter the date (YYYY-MM-DD)"));
 
             Button addButton = new Button("Add Income");
-            addButton.setStyle(BUTTON_STYLE);
-            addButton.setOnMouseEntered(e -> addButton.setStyle(BUTTON_HOVER_STYLE));
-            addButton.setOnMouseExited(e -> addButton.setStyle(BUTTON_STYLE));
-
-            Button backButton = new Button("Back");
-            backButton.setStyle(BUTTON_STYLE);
-            backButton.setOnMouseEntered(e -> backButton.setStyle(BUTTON_HOVER_STYLE));
-            backButton.setOnMouseExited(e -> backButton.setStyle(BUTTON_STYLE));
-
+            styleButton(addButton);
             addButton.setOnAction(e -> {
                 String source = sourceField.getText();
                 String amountText = amountField.getText();
@@ -388,6 +368,8 @@ public class boundary {
                 }
             });
 
+            Button backButton = new Button("Back");
+            styleButton(backButton);
             backButton.setOnAction(e -> new Dashboard(stage, user).show());
 
             root.add(titleLabel, 0, 0, 2, 1);
@@ -400,7 +382,7 @@ public class boundary {
             root.add(addButton, 0, 4);
             root.add(backButton, 1, 4);
 
-            Scene scene = new Scene(root, 400, 500);
+            Scene scene = new Scene(root, 450, 550);
             stage.setScene(scene);
             stage.setTitle("Track Income");
             stage.show();
@@ -423,13 +405,13 @@ public class boundary {
         public void show() {
             GridPane root = new GridPane();
             root.setAlignment(Pos.CENTER);
-            root.setHgap(10);
-            root.setVgap(15);
-            root.setPadding(new Insets(20));
+            root.setHgap(20);
+            root.setVgap(20);
+            root.setPadding(new Insets(40));
             root.setStyle(APP_STYLE);
 
             Label titleLabel = new Label("Track Expense");
-            titleLabel.setStyle(LABEL_STYLE + " -fx-font-size: 20px; -fx-font-weight: bold;");
+            titleLabel.setStyle(LABEL_STYLE + " -fx-font-size: 24px;");
             GridPane.setHalignment(titleLabel, javafx.geometry.HPos.CENTER);
 
             Label amountLabel = new Label("Amount:");
@@ -454,15 +436,7 @@ public class boundary {
             Tooltip.install(dateField, new Tooltip("Enter the date (YYYY-MM-DD)"));
 
             Button addButton = new Button("Add Expense");
-            addButton.setStyle(BUTTON_STYLE);
-            addButton.setOnMouseEntered(e -> addButton.setStyle(BUTTON_HOVER_STYLE));
-            addButton.setOnMouseExited(e -> addButton.setStyle(BUTTON_STYLE));
-
-            Button backButton = new Button("Back");
-            backButton.setStyle(BUTTON_STYLE);
-            backButton.setOnMouseEntered(e -> backButton.setStyle(BUTTON_HOVER_STYLE));
-            backButton.setOnMouseExited(e -> backButton.setStyle(BUTTON_STYLE));
-
+            styleButton(addButton);
             addButton.setOnAction(e -> {
                 String amountText = amountField.getText();
                 String category = categoryField.getText();
@@ -501,6 +475,8 @@ public class boundary {
                 }
             });
 
+            Button backButton = new Button("Back");
+            styleButton(backButton);
             backButton.setOnAction(e -> new Dashboard(stage, user).show());
 
             root.add(titleLabel, 0, 0, 2, 1);
@@ -513,7 +489,7 @@ public class boundary {
             root.add(addButton, 0, 4);
             root.add(backButton, 1, 4);
 
-            Scene scene = new Scene(root, 400, 500);
+            Scene scene = new Scene(root, 450, 550);
             stage.setScene(scene);
             stage.setTitle("Track Expense");
             stage.show();
@@ -536,13 +512,13 @@ public class boundary {
         public void show() {
             GridPane root = new GridPane();
             root.setAlignment(Pos.CENTER);
-            root.setHgap(10);
-            root.setVgap(15);
-            root.setPadding(new Insets(20));
+            root.setHgap(20);
+            root.setVgap(20);
+            root.setPadding(new Insets(40));
             root.setStyle(APP_STYLE);
 
             Label titleLabel = new Label("Set Budget");
-            titleLabel.setStyle(LABEL_STYLE + " -fx-font-size: 20px; -fx-font-weight: bold;");
+            titleLabel.setStyle(LABEL_STYLE + " -fx-font-size: 24px;");
             GridPane.setHalignment(titleLabel, javafx.geometry.HPos.CENTER);
 
             Label categoryLabel = new Label("Category:");
@@ -560,24 +536,7 @@ public class boundary {
             Tooltip.install(amountField, new Tooltip("Enter the budget amount"));
 
             Button setButton = new Button("Set Budget");
-            setButton.setStyle(BUTTON_STYLE);
-            setButton.setOnMouseEntered(e -> setButton.setStyle(BUTTON_HOVER_STYLE));
-            setButton.setOnMouseExited(e -> setButton.setStyle(BUTTON_STYLE));
-
-            Button trackButton = new Button("Track Budget");
-            trackButton.setStyle(BUTTON_STYLE);
-            trackButton.setOnMouseEntered(e -> trackButton.setStyle(BUTTON_HOVER_STYLE));
-            trackButton.setOnMouseExited(e -> trackButton.setStyle(BUTTON_STYLE));
-
-            Label resultLabel = new Label();
-            resultLabel.setStyle(LABEL_STYLE);
-            resultLabel.setWrapText(true);
-
-            Button backButton = new Button("Back");
-            backButton.setStyle(BUTTON_STYLE);
-            backButton.setOnMouseEntered(e -> backButton.setStyle(BUTTON_HOVER_STYLE));
-            backButton.setOnMouseExited(e -> backButton.setStyle(BUTTON_STYLE));
-
+            styleButton(setButton);
             setButton.setOnAction(e -> {
                 String category = categoryField.getText();
                 String amountText = amountField.getText();
@@ -607,16 +566,23 @@ public class boundary {
                 }
             });
 
+            Button trackButton = new Button("Track Budget");
+            styleButton(trackButton);
             trackButton.setOnAction(e -> {
                 String category = categoryField.getText();
                 if (category.isEmpty()) {
                     categoryField.setStyle(TEXT_FIELD_STYLE + ERROR_STYLE);
                 } else {
                     categoryField.setStyle(TEXT_FIELD_STYLE);
-                    resultLabel.setText(budgetController.trackBudget(user.getId(), category));
+                    Label resultLabel = new Label(budgetController.trackBudget(user.getId(), category));
+                    resultLabel.setStyle(LABEL_STYLE);
+                    resultLabel.setWrapText(true);
+                    root.add(resultLabel, 0, 4, 2, 1);
                 }
             });
 
+            Button backButton = new Button("Back");
+            styleButton(backButton);
             backButton.setOnAction(e -> new Dashboard(stage, user).show());
 
             root.add(titleLabel, 0, 0, 2, 1);
@@ -626,10 +592,9 @@ public class boundary {
             root.add(amountField, 1, 2);
             root.add(setButton, 0, 3);
             root.add(trackButton, 1, 3);
-            root.add(resultLabel, 0, 4, 2, 1);
             root.add(backButton, 0, 5, 2, 1);
 
-            Scene scene = new Scene(root, 400, 600);
+            Scene scene = new Scene(root, 450, 650);
             stage.setScene(scene);
             stage.setTitle("Set Budget");
             stage.show();
@@ -652,13 +617,13 @@ public class boundary {
         public void show() {
             GridPane root = new GridPane();
             root.setAlignment(Pos.CENTER);
-            root.setHgap(10);
-            root.setVgap(15);
-            root.setPadding(new Insets(20));
+            root.setHgap(20);
+            root.setVgap(20);
+            root.setPadding(new Insets(40));
             root.setStyle(APP_STYLE);
 
             Label titleLabel = new Label("Set Reminder");
-            titleLabel.setStyle(LABEL_STYLE + " -fx-font-size: 20px; -fx-font-weight: bold;");
+            titleLabel.setStyle(LABEL_STYLE + " -fx-font-size: 24px;");
             GridPane.setHalignment(titleLabel, javafx.geometry.HPos.CENTER);
 
             Label titleFieldLabel = new Label("Title:");
@@ -683,15 +648,7 @@ public class boundary {
             Tooltip.install(timeField, new Tooltip("Enter the time (HH:MM)"));
 
             Button setButton = new Button("Set Reminder");
-            setButton.setStyle(BUTTON_STYLE);
-            setButton.setOnMouseEntered(e -> setButton.setStyle(BUTTON_HOVER_STYLE));
-            setButton.setOnMouseExited(e -> setButton.setStyle(BUTTON_STYLE));
-
-            Button backButton = new Button("Back");
-            backButton.setStyle(BUTTON_STYLE);
-            backButton.setOnMouseEntered(e -> backButton.setStyle(BUTTON_HOVER_STYLE));
-            backButton.setOnMouseExited(e -> backButton.setStyle(BUTTON_STYLE));
-
+            styleButton(setButton);
             setButton.setOnAction(e -> {
                 String title = titleField.getText();
                 String date = dateField.getText();
@@ -728,6 +685,8 @@ public class boundary {
                 }
             });
 
+            Button backButton = new Button("Back");
+            styleButton(backButton);
             backButton.setOnAction(e -> new Dashboard(stage, user).show());
 
             root.add(titleLabel, 0, 0, 2, 1);
@@ -740,7 +699,7 @@ public class boundary {
             root.add(setButton, 0, 4);
             root.add(backButton, 1, 4);
 
-            Scene scene = new Scene(root, 400, 500);
+            Scene scene = new Scene(root, 450, 550);
             stage.setScene(scene);
             stage.setTitle("Set Reminder");
             stage.show();

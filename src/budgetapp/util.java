@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.ResultSet;
 
 /**
  * Contains utility classes for the Personal Budgeting application.
@@ -21,6 +22,7 @@ public class util {
 
         public static void initialize() {
             try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
+                // Create tables if they don't exist
                 stmt.execute("CREATE TABLE IF NOT EXISTS users (" +
                         "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         "email TEXT NOT NULL, " +
@@ -53,7 +55,15 @@ public class util {
                         "title TEXT, " +
                         "date TEXT, " +
                         "time TEXT, " +
+                        "completed BOOLEAN DEFAULT FALSE, " +
                         "FOREIGN KEY(user_id) REFERENCES users(id))");
+
+                // Check if completed column exists in reminders table and add if missing
+                try (ResultSet rs = conn.getMetaData().getColumns(null, null, "reminders", "completed")) {
+                    if (!rs.next()) {
+                        stmt.execute("ALTER TABLE reminders ADD COLUMN completed BOOLEAN DEFAULT FALSE");
+                    }
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }

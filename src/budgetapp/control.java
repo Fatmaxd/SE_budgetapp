@@ -4,6 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ButtonBar;
+
 
 /**
  * Contains all control classes for the Personal Budgeting application.
@@ -131,20 +138,78 @@ public class control {
     /**
      * Manages reminder-related operations.
      */
-    public static class ReminderController {
-        public boolean setReminder(int userId, String title, String date, String time) {
-            String sql = "INSERT INTO reminders (user_id, title, date, time) VALUES (?, ?, ?, ?)";
-            try (Connection conn = util.Database.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setInt(1, userId);
-                pstmt.setString(2, title);
-                pstmt.setString(3, date);
-                pstmt.setString(4, time);
-                pstmt.executeUpdate();
-                return true;
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return false;
+public static class ReminderController {
+    public boolean setReminder(int userId, String title, String date, String time) {
+        String sql = "INSERT INTO reminders (user_id, title, date, time, completed) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = util.Database.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, userId);
+            pstmt.setString(2, title);
+            pstmt.setString(3, date);
+            pstmt.setString(4, time);
+            pstmt.setBoolean(5, false);
+            pstmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public void checkReminders(int userId) {
+        String sql = "SELECT id, title, date, time FROM reminders WHERE user_id = ? AND date || ' ' || time <= ? AND completed = FALSE";
+        try (Connection conn = util.Database.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, userId);
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            pstmt.setString(2, now.format(formatter));
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                int reminderId = rs.getInt("id");
+                String title = rs.getString("title");
+                String date = rs.getString("date");
+                String time = rs.getString("time");
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Reminder");
+                    alert.setHeaderText("Reminder: " + title);
+                    alert.setContentText("Due: " + date + " " + time);
+                    ButtonType markCompleted = new ButtonType("Mark as Completed");
+                    ButtonType dismiss = new ButtonType("Dismiss", ButtonBar.ButtonData.CANCEL_CLOSE);
+                    alert.getButtonTypes().setAll(markCompleted, dismiss);
+                    alert.showAndWait().ifPresent(response -> {
+                        if (response == markCompleted) {
+                            markReminderCompleted(userId, reminderId);
+                        }
+                    });
+                });
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void markReminderCompleted(int userId, int reminderId) {
+        String sql = "UPDATE reminders SET completed = TRUE WHERE user_id = ? AND id = ?";
+        try (Connection conn = util.Database.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, reminderId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }
+
+    private void deleteReminder(int userId, String title, String date, String time) {
+        String sql = "DELETE FROM reminders WHERE user_id = ? AND title = ? AND date = ? AND time = ?";
+        try (Connection conn = util.Database.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, userId);
+            pstmt.setString(2, title);
+            pstmt.setString(3, date);
+            pstmt.setString(4, time);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    }

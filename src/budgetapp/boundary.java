@@ -521,17 +521,44 @@ public class boundary {
         }
     }
 
+    /**
+     * Represents the page where users can input and track their income in the Personal Budgeting application.
+     * This page allows users to enter details such as the income source, amount, and date, and save the data to the system.
+     */
     public static class IncomeTrackingPage {
+
+        /**
+         * The JavaFX stage on which the income tracking page is displayed.
+         */
         private Stage stage;
+
+        /**
+         * The authenticated user whose income is being tracked.
+         */
         private entity.User user;
+
+        /**
+         * The controller responsible for handling income-related operations.
+         */
         private control.IncomeController incomeController = new control.IncomeController();
 
+        /**
+         * Constructs the IncomeTrackingPage with the specified stage and user.
+         *
+         * @param stage the main application window
+         * @param user  the authenticated {@link entity.User} instance
+         */
         public IncomeTrackingPage(Stage stage, entity.User user) {
             this.stage = stage;
             this.user = user;
         }
 
+        /**
+         * Displays the income tracking interface, allowing the user to input income details.
+         * Includes fields for source, amount, and date, as well as buttons for adding the income or navigating back.
+         */
         public void show() {
+            // Layout setup
             VBox root = new VBox(25);
             root.setAlignment(Pos.CENTER);
             root.setPadding(new Insets(40));
@@ -539,37 +566,45 @@ public class boundary {
             root.setMaxWidth(450);
             root.setEffect(new DropShadow(10, Color.web("#000000", 0.4)));
 
+            // Page title
             Label titleLabel = new Label("Track Income");
             titleLabel.setStyle(LABEL_STYLE + " -fx-font-size: 32px; -fx-padding: 0 0 25 0; -fx-letter-spacing: 0.5px;");
 
+            // Form container for income details
             VBox formBox = new VBox(15);
             formBox.setStyle("-fx-background-color: rgba(255,255,255,0.08); -fx-background-radius: 15; -fx-padding: 25; -fx-border-color: #4A4A4A; -fx-border-width: 1; -fx-border-radius: 15;");
 
+            // Source input field
             Label sourceLabel = new Label("Source");
             sourceLabel.setStyle(LABEL_STYLE);
             TextField sourceField = new TextField();
             sourceField.setPromptText("e.g., Salary");
             sourceField.setStyle(TEXT_FIELD_STYLE);
 
+            // Amount input field
             Label amountLabel = new Label("Amount");
             amountLabel.setStyle(LABEL_STYLE);
             TextField amountField = new TextField();
             amountField.setPromptText("Enter amount");
             amountField.setStyle(TEXT_FIELD_STYLE);
 
+            // Date input field
             Label dateLabel = new Label("Date");
             dateLabel.setStyle(LABEL_STYLE);
             TextField dateField = new TextField();
             dateField.setPromptText("YYYY-MM-DD");
             dateField.setStyle(TEXT_FIELD_STYLE);
 
+            // Button container
             HBox buttonBox = new HBox(20);
             buttonBox.setAlignment(Pos.CENTER);
 
+            // Add income button
             Button addButton = new Button("Add Income");
             styleButton(addButton);
             addButton.setMinWidth(100);
             addButton.setOnAction(e -> {
+                // Validate inputs
                 String source = sourceField.getText();
                 String amountText = amountField.getText();
                 String date = dateField.getText();
@@ -595,6 +630,7 @@ public class boundary {
                     dateField.setStyle(TEXT_FIELD_STYLE);
                 }
                 if (!hasError) {
+                    // Add income to the system
                     boolean success = incomeController.addIncome(user.getId(), source, amount, date);
                     if (success) {
                         new Alert(Alert.AlertType.INFORMATION, "Income added successfully!").showAndWait();
@@ -607,19 +643,22 @@ public class boundary {
                 }
             });
 
+            // Back button
             Button backButton = new Button("Back");
             styleButton(backButton);
             backButton.setMinWidth(100);
             backButton.setOnAction(e -> new Dashboard(stage, user).show());
 
+            // Add form fields and buttons to the layout
             formBox.getChildren().addAll(
-                sourceLabel, sourceField,
-                amountLabel, amountField,
-                dateLabel, dateField
+                    sourceLabel, sourceField,
+                    amountLabel, amountField,
+                    dateLabel, dateField
             );
             buttonBox.getChildren().addAll(addButton, backButton);
             root.getChildren().addAll(titleLabel, formBox, buttonBox);
 
+            // Show the scene
             Scene scene = new Scene(root, 550, 650);
             stage.setScene(scene);
             stage.setTitle("Track Income");
@@ -627,17 +666,44 @@ public class boundary {
         }
     }
 
+    /**
+     * Represents the page where users can input and track their expenses in the Personal Budgeting application.
+     * This page allows users to enter details such as the expense amount, category, and date, and save the data to the system.
+     */
     public static class ExpenseTrackingPage {
+
+        /**
+         * The JavaFX stage on which the expense tracking page is displayed.
+         */
         private Stage stage;
+
+        /**
+         * The authenticated user whose expenses are being tracked.
+         */
         private entity.User user;
+
+        /**
+         * The controller responsible for handling expense-related operations.
+         */
         private control.ExpenseController expenseController = new control.ExpenseController();
 
+        /**
+         * Constructs the ExpenseTrackingPage with the specified stage and user.
+         *
+         * @param stage the main application window
+         * @param user  the authenticated {@link entity.User} instance
+         */
         public ExpenseTrackingPage(Stage stage, entity.User user) {
             this.stage = stage;
             this.user = user;
         }
 
+        /**
+         * Displays the expense tracking interface, allowing the user to input expense details.
+         * Includes fields for amount, category, and date, as well as buttons for adding the expense or navigating back.
+         */
         public void show() {
+            // Layout setup
             VBox root = new VBox(25);
             root.setAlignment(Pos.CENTER);
             root.setPadding(new Insets(40));
@@ -645,37 +711,45 @@ public class boundary {
             root.setMaxWidth(450);
             root.setEffect(new DropShadow(10, Color.web("#000000", 0.4)));
 
+            // Page title
             Label titleLabel = new Label("Track Expenses");
             titleLabel.setStyle(LABEL_STYLE + " -fx-font-size: 32px; -fx-padding: 0 0 25 0; -fx-letter-spacing: 0.5px;");
 
+            // Form container for expense details
             VBox formBox = new VBox(15);
             formBox.setStyle("-fx-background-color: rgba(255,255,255,0.08); -fx-background-radius: 15; -fx-padding: 25; -fx-border-color: #4A4A4A; -fx-border-width: 1; -fx-border-radius: 15;");
 
+            // Amount input field
             Label amountLabel = new Label("Amount");
             amountLabel.setStyle(LABEL_STYLE);
             TextField amountField = new TextField();
             amountField.setPromptText("Enter amount");
             amountField.setStyle(TEXT_FIELD_STYLE);
 
+            // Category input field
             Label categoryLabel = new Label("Category");
             categoryLabel.setStyle(LABEL_STYLE);
             TextField categoryField = new TextField();
             categoryField.setPromptText("e.g., Food");
             categoryField.setStyle(TEXT_FIELD_STYLE);
 
+            // Date input field
             Label dateLabel = new Label("Date");
             dateLabel.setStyle(LABEL_STYLE);
             TextField dateField = new TextField();
             dateField.setPromptText("YYYY-MM-DD");
             dateField.setStyle(TEXT_FIELD_STYLE);
 
+            // Button container
             HBox buttonBox = new HBox(20);
             buttonBox.setAlignment(Pos.CENTER);
 
+            // Add expense button
             Button addButton = new Button("Add Expense");
             styleButton(addButton);
             addButton.setMinWidth(100);
             addButton.setOnAction(e -> {
+                // Validate inputs
                 String amountText = amountField.getText();
                 String category = categoryField.getText();
                 String date = dateField.getText();
@@ -701,6 +775,7 @@ public class boundary {
                     dateField.setStyle(TEXT_FIELD_STYLE);
                 }
                 if (!hasError) {
+                    // Add expense to the system
                     boolean success = expenseController.addExpense(user.getId(), amount, category, date);
                     if (success) {
                         new Alert(Alert.AlertType.INFORMATION, "Expense added successfully!").showAndWait();
@@ -713,19 +788,22 @@ public class boundary {
                 }
             });
 
+            // Back button
             Button backButton = new Button("Back");
             styleButton(backButton);
             backButton.setMinWidth(100);
             backButton.setOnAction(e -> new Dashboard(stage, user).show());
 
+            // Add form fields and buttons to the layout
             formBox.getChildren().addAll(
-                amountLabel, amountField,
-                categoryLabel, categoryField,
-                dateLabel, dateField
+                    amountLabel, amountField,
+                    categoryLabel, categoryField,
+                    dateLabel, dateField
             );
             buttonBox.getChildren().addAll(addButton, backButton);
             root.getChildren().addAll(titleLabel, formBox, buttonBox);
 
+            // Show the scene
             Scene scene = new Scene(root, 550, 650);
             stage.setScene(scene);
             stage.setTitle("Track Expenses");
@@ -733,17 +811,45 @@ public class boundary {
         }
     }
 
+    /**
+     * Represents the page where users can set and track their budgets for various categories in the Personal Budgeting application.
+     * Users can set a budget for a specific category and track their progress towards the budget.
+     */
     public static class BudgetPage {
+
+        /**
+         * The JavaFX stage on which the budget management page is displayed.
+         */
         private Stage stage;
+
+        /**
+         * The authenticated user whose budgets are being managed.
+         */
         private entity.User user;
+
+        /**
+         * The controller responsible for handling budget-related operations.
+         */
         private control.BudgetController budgetController = new control.BudgetController();
 
+        /**
+         * Constructs the BudgetPage with the specified stage and user.
+         *
+         * @param stage the main application window
+         * @param user  the authenticated {@link entity.User} instance
+         */
         public BudgetPage(Stage stage, entity.User user) {
             this.stage = stage;
             this.user = user;
         }
 
+        /**
+         * Displays the budget management interface, allowing the user to set a budget for a specific category
+         * and track the current budget status.
+         * The user can either set a new budget or track the current budget for a category.
+         */
         public void show() {
+            // Layout setup
             VBox root = new VBox(25);
             root.setAlignment(Pos.CENTER);
             root.setPadding(new Insets(40));
@@ -751,31 +857,38 @@ public class boundary {
             root.setMaxWidth(450);
             root.setEffect(new DropShadow(10, Color.web("#000000", 0.4)));
 
+            // Page title
             Label titleLabel = new Label("Manage Budget");
             titleLabel.setStyle(LABEL_STYLE + " -fx-font-size: 32px; -fx-padding: 0 0 25 0; -fx-letter-spacing: 0.5px;");
 
+            // Form container for budget details
             VBox formBox = new VBox(15);
             formBox.setStyle("-fx-background-color: rgba(255,255,255,0.08); -fx-background-radius: 15; -fx-padding: 25; -fx-border-color: #4A4A4A; -fx-border-width: 1; -fx-border-radius: 15;");
 
+            // Category input field
             Label categoryLabel = new Label("Category");
             categoryLabel.setStyle(LABEL_STYLE);
             TextField categoryField = new TextField();
             categoryField.setPromptText("e.g., Food");
             categoryField.setStyle(TEXT_FIELD_STYLE);
 
+            // Amount input field
             Label amountLabel = new Label("Amount");
             amountLabel.setStyle(LABEL_STYLE);
             TextField amountField = new TextField();
             amountField.setPromptText("Budget amount");
             amountField.setStyle(TEXT_FIELD_STYLE);
 
+            // Button container
             HBox buttonBox = new HBox(20);
             buttonBox.setAlignment(Pos.CENTER);
 
+            // Set budget button
             Button setButton = new Button("Set Budget");
             styleButton(setButton);
             setButton.setMinWidth(100);
             setButton.setOnAction(e -> {
+                // Validate inputs
                 String category = categoryField.getText();
                 String amountText = amountField.getText();
                 boolean hasError = false;
@@ -794,6 +907,7 @@ public class boundary {
                     hasError = true;
                 }
                 if (!hasError) {
+                    // Set the budget in the system
                     boolean success = budgetController.createBudget(user.getId(), category, amount);
                     if (success) {
                         new Alert(Alert.AlertType.INFORMATION, "Budget set successfully!").showAndWait();
@@ -804,15 +918,18 @@ public class boundary {
                 }
             });
 
+            // Track budget button
             Button trackButton = new Button("Track Budget");
             styleButton(trackButton);
             trackButton.setMinWidth(100);
             trackButton.setOnAction(e -> {
+                // Track the current budget for the category
                 String category = categoryField.getText();
                 if (category.isEmpty()) {
                     categoryField.setStyle(TEXT_FIELD_STYLE + ERROR_STYLE);
                 } else {
                     categoryField.setStyle(TEXT_FIELD_STYLE);
+                    // Display the tracked budget information
                     Label resultLabel = new Label(budgetController.trackBudget(user.getId(), category));
                     resultLabel.setStyle(LABEL_STYLE + " -fx-padding: 10; -fx-background-color: rgba(255,255,255,0.08); -fx-background-radius: 8;");
                     resultLabel.setWrapText(true);
@@ -821,18 +938,21 @@ public class boundary {
                 }
             });
 
+            // Back button
             Button backButton = new Button("Back");
             styleButton(backButton);
             backButton.setMinWidth(100);
             backButton.setOnAction(e -> new Dashboard(stage, user).show());
 
+            // Add form fields and buttons to the layout
             formBox.getChildren().addAll(
-                categoryLabel, categoryField,
-                amountLabel, amountField
+                    categoryLabel, categoryField,
+                    amountLabel, amountField
             );
             buttonBox.getChildren().addAll(setButton, trackButton, backButton);
             root.getChildren().addAll(titleLabel, formBox, buttonBox);
 
+            // Show the scene
             Scene scene = new Scene(root, 550, 650);
             stage.setScene(scene);
             stage.setTitle("Manage Budget");
@@ -840,17 +960,44 @@ public class boundary {
         }
     }
 
+    /**
+     * Represents the page where users can set reminders in the Personal Budgeting application.
+     * Users can create a reminder with a title, date, and time.
+     */
     public static class ReminderPage {
+
+        /**
+         * The JavaFX stage on which the reminder setting page is displayed.
+         */
         private Stage stage;
+
+        /**
+         * The authenticated user for whom the reminders are being set.
+         */
         private entity.User user;
+
+        /**
+         * The controller responsible for handling reminder-related operations.
+         */
         private control.ReminderController reminderController = new control.ReminderController();
 
+        /**
+         * Constructs the ReminderPage with the specified stage and user.
+         *
+         * @param stage the main application window
+         * @param user  the authenticated {@link entity.User} instance
+         */
         public ReminderPage(Stage stage, entity.User user) {
             this.stage = stage;
             this.user = user;
         }
 
+        /**
+         * Displays the reminder setting interface, allowing the user to input a title, date, and time for the reminder.
+         * The user can set the reminder or go back to the previous screen.
+         */
         public void show() {
+            // Layout setup
             VBox root = new VBox(25);
             root.setAlignment(Pos.CENTER);
             root.setPadding(new Insets(40));
@@ -858,37 +1005,45 @@ public class boundary {
             root.setMaxWidth(450);
             root.setEffect(new DropShadow(10, Color.web("#000000", 0.4)));
 
+            // Page title
             Label titleLabel = new Label("Set Reminder");
             titleLabel.setStyle(LABEL_STYLE + " -fx-font-size: 32px; -fx-padding: 0 0 25 0; -fx-letter-spacing: 0.5px;");
 
+            // Form container for reminder details
             VBox formBox = new VBox(15);
             formBox.setStyle("-fx-background-color: rgba(255,255,255,0.08); -fx-background-radius: 15; -fx-padding: 25; -fx-border-color: #4A4A4A; -fx-border-width: 1; -fx-border-radius: 15;");
 
+            // Title input field
             Label titleFieldLabel = new Label("Title");
             titleFieldLabel.setStyle(LABEL_STYLE);
             TextField titleField = new TextField();
             titleField.setPromptText("e.g., Pay Rent");
             titleField.setStyle(TEXT_FIELD_STYLE);
 
+            // Date input field
             Label dateLabel = new Label("Date");
             dateLabel.setStyle(LABEL_STYLE);
             TextField dateField = new TextField();
             dateField.setPromptText("YYYY-MM-DD");
             dateField.setStyle(TEXT_FIELD_STYLE);
 
+            // Time input field
             Label timeLabel = new Label("Time");
             timeLabel.setStyle(LABEL_STYLE);
             TextField timeField = new TextField();
             timeField.setPromptText("HH:MM");
             timeField.setStyle(TEXT_FIELD_STYLE);
 
+            // Button container
             HBox buttonBox = new HBox(20);
             buttonBox.setAlignment(Pos.CENTER);
 
+            // Set reminder button
             Button setButton = new Button("Set Reminder");
             styleButton(setButton);
             setButton.setMinWidth(100);
             setButton.setOnAction(e -> {
+                // Validate inputs
                 String title = titleField.getText();
                 String date = dateField.getText();
                 String time = timeField.getText();
@@ -912,6 +1067,7 @@ public class boundary {
                     timeField.setStyle(TEXT_FIELD_STYLE);
                 }
                 if (!hasError) {
+                    // Set the reminder in the system
                     boolean success = reminderController.setReminder(user.getId(), title, date, time);
                     if (success) {
                         new Alert(Alert.AlertType.INFORMATION, "Reminder set successfully!").showAndWait();
@@ -924,19 +1080,22 @@ public class boundary {
                 }
             });
 
+            // Back button
             Button backButton = new Button("Back");
             styleButton(backButton);
             backButton.setMinWidth(100);
             backButton.setOnAction(e -> new Dashboard(stage, user).show());
 
+            // Add form fields and buttons to the layout
             formBox.getChildren().addAll(
-                titleFieldLabel, titleField,
-                dateLabel, dateField,
-                timeLabel, timeField
+                    titleFieldLabel, titleField,
+                    dateLabel, dateField,
+                    timeLabel, timeField
             );
             buttonBox.getChildren().addAll(setButton, backButton);
             root.getChildren().addAll(titleLabel, formBox, buttonBox);
 
+            // Show the scene
             Scene scene = new Scene(root, 550, 650);
             stage.setScene(scene);
             stage.setTitle("Set Reminder");
